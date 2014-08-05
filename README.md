@@ -3,12 +3,41 @@ luajit-gumbo
 
 Lua FFI binding for [gumbo-parser], an HTML5 parser written in C. It produces output in [LOM format]. An alternative is [lua-gumbo].
 
+Usage
+-----
+
+```lua
+local gumbo = require 'gumbo'
+local dom = gumbo.parse '<span id="foo">bar</span>'
+```
+
+..is equivalent to..
+
+```lua
+local dom = {
+  tag = 'html',
+  attr = {},
+  [1] = {
+    tag = 'body',
+    attr = {},
+    [1] = {
+      tag = 'span',
+      attr = {
+        id = 'foo',
+        [1] = 'id'
+      },
+      [1] = 'bar'
+    }
+  }
+}
+```
+
 Installation
 ------------
 
 Gumbo will be downloaded and compiled by the Makefile.
 
-```
+```bash
 luarocks install https://raw.github.com/pguillory/luajit-gumbo/master/rockspec/luajit-gumbo-0.1-2.rockspec
 ```
 
