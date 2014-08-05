@@ -1,4 +1,5 @@
 install: gumbo.h
+	pwd
 
 gumbo.h: lib
 	echo '#include "gumbo-parser/src/gumbo.h"' | gcc -E - | grep -v '^#' > gumbo.h
