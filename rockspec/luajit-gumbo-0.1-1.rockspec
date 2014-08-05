@@ -1,7 +1,7 @@
 package = "luajit-gumbo"
 version = "0.1-1"
 source = {
-   url = "https://github.com/pguillory/luajit-gumbo"
+   url = "git://github.com/pguillory/luajit-gumbo"
 }
 description = {
    summary = "FFI binding for gumbo-parser",
