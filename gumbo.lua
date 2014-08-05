@@ -1,27 +1,16 @@
 local ffi = require 'ffi'
 
-local gumbo = {}
+local libgumbo = (function()
+  local DIR = debug.getinfo(1).source:match('@(.*/)')
 
-do
-  -- echo '#include <gumbo.h>' | gcc -E - | grep -v '^#' > gumbo.h
-  local dir = debug.getinfo(1).source:match('@(.*/)')
-  local file = io.open(dir .. 'gumbo.h')
+  local file = io.open(DIR .. 'gumbo.h')
   ffi.cdef(file:read('*a'))
   file:close()
-end
 
-function lib(name)
-  local cpath = package.cpath:gsub('([^;]*)%.so;', function(base)
-    return base .. '.so;' .. base .. '.dylib;'
-  end)
-  local filename = package.searchpath('lib' .. name, cpath, '')
-  if not filename then
-    error('Failed to locate lib' .. name .. ', tried:\n' .. cpath:gsub(';', '\n'))
-  end
+  local filename = package.searchpath(DIR .. 'lib/libgumbo', '?.dylib;?.so;', '')
+  assert(filename, 'libgumbo not found -- try running make')
   return ffi.load(filename)
-end
-
-local libgumbo = lib('gumbo')
+end)()
 
 local GUMBO_NODE_DOCUMENT   = tonumber(libgumbo.GUMBO_NODE_DOCUMENT)
 local GUMBO_NODE_ELEMENT    = tonumber(libgumbo.GUMBO_NODE_ELEMENT)
@@ -66,6 +55,12 @@ local function transform_gumbo_node_to_lom_node(gumbo_node)
     return ffi.string(gumbo_node.v.text.text)
   end
 end
+
+--------------------------------------------------------------------------------
+-- gumbo
+--------------------------------------------------------------------------------
+
+local gumbo = {}
 
 function gumbo.parse(input)
   local output = libgumbo.gumbo_parse(input)
