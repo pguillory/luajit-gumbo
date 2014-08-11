@@ -14,22 +14,20 @@ local dom = gumbo.parse '<span id="foo">bar</span>'
 ..is equivalent to..
 
 ```lua
-local dom = {
-  tag = 'html',
-  attr = {},
-  [1] = {
-    tag = 'body',
+local dom =
+  { tag = 'html',
     attr = {},
-    [1] = {
-      tag = 'span',
-      attr = {
-        id = 'foo',
-        [1] = 'id'
-      },
-      [1] = 'bar'
+    { tag = 'body',
+      attr = {},
+      { tag = 'span',
+        attr = {
+          id = 'foo',
+          [1] = 'id'
+        },
+        'bar'
+      }
     }
   }
-}
 ```
 
 Installation
